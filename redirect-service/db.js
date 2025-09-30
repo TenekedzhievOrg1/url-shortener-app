@@ -5,7 +5,7 @@ dotenv.config();
 
 const pool = new Pool({
   connectionString:
-    process.env.DATABASE_URL || "postgres://user:pass@db:5432/url_shortener",
+    process.env.DATABASE_URL,
 });
 
 export default pool;
