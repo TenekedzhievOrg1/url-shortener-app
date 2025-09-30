@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: url_shortener
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    networks:
+      - urlnet
+
+  shortener-service:
+    build: ./shortener-service
+    env_file:
+      - ./shortener-service/.env
+    depends_on:
+      - db
+    networks:
+      - urlnet
+
+  redirect-service:
+    build: ./redirect-service
+    env_file:
+      - ./redirect-service/.env
+    depends_on:
+      - db
+    networks:
+      - urlnet
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - shortener-service
+      - redirect-service
+    networks:
+      - urlnet
+
+volumes:
+  db_data:
+
+networks:
+  urlnet:

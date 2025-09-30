@@ -1,0 +1,16 @@
+node_modules/
+**/node_modules/
+
+.env
+.env.* 
+
+*.log
+npm-debug.log*
+
+docker-compose.override.yml
+*.env.docker
+
+.DS_Store
+Thumbs.db
+
+.github/workflows/*.cache
