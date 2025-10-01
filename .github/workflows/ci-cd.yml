@@ -1,5 +1,8 @@
 name: CI/CD Pipeline
 
+env:
+    AWS_REGION: us-east-1
+
 on:
     push:
         branches:
@@ -16,16 +19,6 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
-
-            - name: Configure AWS credentials (OIDC)
-              uses: aws-actions/configure-aws-credentials@v4
-              with:
-                  role-to-assume: arn:aws:iam::586794451190:role/GithubActionsRole-url-shortener
-                  aws-region: us-east-1
-
-            - name: Log in to Amazon ECR
-              id: login-ecr
-              uses: aws-actions/amazon-ecr-login@v2
 
             - name: Build Docker images
               run: |
@@ -59,6 +52,17 @@ jobs:
                   exit-code: "1"
                   vuln-type: "os,library"
                   severity: "CRITICAL,HIGH"
+
+            - name: Configure AWS credentials (OIDC)
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  role-to-assume: arn:aws:iam::586794451190:role/GithubActionsRole-url-shortener
+                  aws-region: ${{ env.AWS_REGION }}
+
+            - name: Log in to Amazon ECR
+              run: |
+                  aws ecr-public get-login-password --region ${{ env.AWS_REGION }} \
+                  | docker login --username AWS --password-stdin public.ecr.aws
 
             - name: Push Docker images to Amazon ECR
               run: |
