@@ -37,7 +37,7 @@ jobs:
               uses: aquasecurity/trivy-action@0.20.0
               with:
                   image-ref: ${{ steps.login-ecr.outputs.registry }}/shortener:${{ github.sha }}
-                  format: "table"
+                  format: "json"
                   exit-code: "1"
                   vuln-type: "os,library"
                   severity: "CRITICAL,HIGH"
@@ -46,7 +46,7 @@ jobs:
               uses: aquasecurity/trivy-action@0.20.0
               with:
                   image-ref: ${{ steps.login-ecr.outputs.registry }}/redirect:${{ github.sha }}
-                  format: "table"
+                  format: "json"
                   exit-code: "1"
                   vuln-type: "os,library"
                   severity: "CRITICAL,HIGH"
@@ -55,7 +55,7 @@ jobs:
               uses: aquasecurity/trivy-action@0.20.0
               with:
                   image-ref: ${{ steps.login-ecr.outputs.registry }}/frontend:${{ github.sha }}
-                  format: "table"
+                  format: "json"
                   exit-code: "1"
                   vuln-type: "os,library"
                   severity: "CRITICAL,HIGH"
