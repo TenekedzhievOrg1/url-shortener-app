@@ -29,14 +29,14 @@ jobs:
 
             - name: Build Docker images
               run: |
-                  docker build -t ${{ steps.login-ecr.outputs.registry }}/shortener:${{ github.sha }} ./shortener-service
-                  docker build -t ${{ steps.login-ecr.outputs.registry }}/redirect:${{ github.sha }} ./redirect-service
-                  docker build -t ${{ steps.login-ecr.outputs.registry }}/frontend:${{ github.sha }} ./frontend
+                  docker build -t public.ecr.aws/t4h0a4r3/url-shortener-shortener:${{ github.sha }} ./shortener-service
+                  docker build -t public.ecr.aws/t4h0a4r3/url-shortener-redirect:${{ github.sha }} ./redirect-service
+                  docker build -t public.ecr.aws/t4h0a4r3/url-shortener-frontend:${{ github.sha }} ./frontend
 
             - name: Scan shortener service
               uses: aquasecurity/trivy-action@0.20.0
               with:
-                  image-ref: ${{ steps.login-ecr.outputs.registry }}/shortener:${{ github.sha }}
+                  image-ref: public.ecr.aws/t4h0a4r3/url-shortener-shortener:${{ github.sha }}
                   format: "json"
                   exit-code: "1"
                   vuln-type: "os,library"
@@ -45,7 +45,7 @@ jobs:
             - name: Scan redirect service
               uses: aquasecurity/trivy-action@0.20.0
               with:
-                  image-ref: ${{ steps.login-ecr.outputs.registry }}/redirect:${{ github.sha }}
+                  image-ref: public.ecr.aws/t4h0a4r3/url-shortener-redirect:${{ github.sha }}
                   format: "json"
                   exit-code: "1"
                   vuln-type: "os,library"
@@ -54,17 +54,17 @@ jobs:
             - name: Scan frontend service
               uses: aquasecurity/trivy-action@0.20.0
               with:
-                  image-ref: ${{ steps.login-ecr.outputs.registry }}/frontend:${{ github.sha }}
+                  image-ref: public.ecr.aws/t4h0a4r3/url-shortener-frontend:${{ github.sha }}
                   format: "json"
                   exit-code: "1"
                   vuln-type: "os,library"
                   severity: "CRITICAL,HIGH"
 
-            # - name: Push Docker images to Amazon ECR
-            #   run: |
-            #       docker push ${{ steps.login-ecr.outputs.registry }}/shortener:${{ github.sha }}
-            #       docker push ${{ steps.login-ecr.outputs.registry }}/redirect:${{ github.sha }}
-            #       docker push ${{ steps.login-ecr.outputs.registry }}/frontend:${{ github.sha }}
+            - name: Push Docker images to Amazon ECR
+              run: |
+                  docker push public.ecr.aws/t4h0a4r3/url-shortener-shortener:${{ github.sha }}
+                  docker push public.ecr.aws/t4h0a4r3/url-shortener-redirect:${{ github.sha }}
+                  docker push public.ecr.aws/t4h0a4r3/url-shortener-frontend:${{ github.sha }}
 
     # cd:
     #     name: Deploy to ECS
