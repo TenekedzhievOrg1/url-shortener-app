@@ -29,8 +29,8 @@ jobs:
 
             - name: Build Docker images
               run: |
-                  docker build -t ${{ steps.login-ecr.outputs.registry }}/shortener:${{ github.sha }} ./shortener
-                  docker build -t ${{ steps.login-ecr.outputs.registry }}/redirect:${{ github.sha }} ./redirect
+                  docker build -t ${{ steps.login-ecr.outputs.registry }}/shortener:${{ github.sha }} ./shortener-service
+                  docker build -t ${{ steps.login-ecr.outputs.registry }}/redirect:${{ github.sha }} ./redirect-service
                   docker build -t ${{ steps.login-ecr.outputs.registry }}/frontend:${{ github.sha }} ./frontend
 
             - name: Scan Docker images with Trivy
