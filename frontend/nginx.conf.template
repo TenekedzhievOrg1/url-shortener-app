@@ -13,12 +13,12 @@ server {
   location /api/shortener/ {
     limit_req zone=mylimit burst=5 nodelay;
     limit_req_status 429;
-    proxy_pass http://shortener-service:5000/;
+    proxy_pass http://$SHORTENER_HOST:5000/;
   }
 
   location /api/redirect/ {
     limit_req zone=mylimit burst=5 nodelay;
     limit_req_status 429;
-    proxy_pass http://redirect-service:5001/;
+    proxy_pass http://$REDIRECT_HOST:5001/;
   }
 }
