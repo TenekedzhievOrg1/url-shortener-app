@@ -23,14 +23,14 @@ jobs:
 
       - name: Build Docker images
         run: |
-          docker build -t $ECR_ALIAS/url-shortener-shortener:${{ github.sha }} ./shortener-service
-          docker build -t $ECR_ALIAS/url-shortener-redirect:${{ github.sha }} ./redirect-service
-          docker build -t $ECR_ALIAS/url-shortener-frontend:${{ github.sha }} ./frontend
+          docker build -t ${{ env.ECR_ALIAS }}/url-shortener-shortener:${{ github.sha }} ./shortener-service
+          docker build -t ${{ env.ECR_ALIAS }}/url-shortener-redirect:${{ github.sha }} ./redirect-service
+          docker build -t ${{ env.ECR_ALIAS }}/url-shortener-frontend:${{ github.sha }} ./frontend
 
       - name: Scan shortener service
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: $ECR_ALIAS/url-shortener-shortener:${{ github.sha }}
+          image-ref: ${{ env.ECR_ALIAS }}/url-shortener-shortener:${{ github.sha }}
           format: "json"
           exit-code: "1"
           vuln-type: "os,library"
@@ -39,7 +39,7 @@ jobs:
       - name: Scan redirect service
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: $ECR_ALIAS/url-shortener-redirect:${{ github.sha }}
+          image-ref: ${{ env.ECR_ALIAS }}/url-shortener-redirect:${{ github.sha }}
           format: "json"
           exit-code: "1"
           vuln-type: "os,library"
@@ -48,7 +48,7 @@ jobs:
       - name: Scan frontend service
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: $ECR_ALIAS/url-shortener-frontend:${{ github.sha }}
+          image-ref: ${{ env.ECR_ALIAS }}/url-shortener-frontend:${{ github.sha }}
           format: "json"
           exit-code: "1"
           vuln-type: "os,library"
@@ -67,9 +67,9 @@ jobs:
 
       - name: Push Docker images to Amazon ECR
         run: |
-          docker push $ECR_ALIAS/url-shortener-shortener:${{ github.sha }}
-          docker push $ECR_ALIAS/url-shortener-redirect:${{ github.sha }}
-          docker push $ECR_ALIAS/url-shortener-frontend:${{ github.sha }}
+          docker push ${{ env.ECR_ALIAS }}/url-shortener-shortener:${{ github.sha }}
+          docker push ${{ env.ECR_ALIAS }}/url-shortener-redirect:${{ github.sha }}
+          docker push ${{ env.ECR_ALIAS }}/url-shortener-frontend:${{ github.sha }}
 
   # cd:
   #   name: Deploy to ECS
@@ -92,7 +92,7 @@ jobs:
   #     - name: Update Shortener Service
   #       run: |
   #         TASK_FAMILY=shortener-task
-  #         IMAGE_URI=$ECR_ALIAS/url-shortener-shortener:${{ github.sha }}
+  #         IMAGE_URI=${{ env.ECR_ALIAS }}/url-shortener-shortener:${{ github.sha }}
 
   #         # Get current task definition JSON
   #         aws ecs describe-task-definition \
