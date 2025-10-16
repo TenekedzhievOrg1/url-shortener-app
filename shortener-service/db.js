@@ -8,6 +8,13 @@ import {
 dotenv.config();
 
 async function getDbCredentials() {
+  if (process.env.NODE_ENV === "development") {
+    return {
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+    };
+  }
+
   try {
     const client = new SecretsManagerClient({ region: process.env.AWS_REGION });
     const command = new GetSecretValueCommand({
